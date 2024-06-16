@@ -79,13 +79,13 @@ def main():
             vol = np.interp(length, [minVol, maxVol], [0, 100])
 
             # Set system volume based on length
-            # volume_script = SET_VOLUME_SCRIPT.format(volume=int(vol))
-            # execute_applescript(volume_script)
+            volume_script = SET_VOLUME_SCRIPT.format(volume=int(vol))
+            execute_applescript(volume_script)
 
             print(f"Length: {length}, Volume: {vol}")
 
             # Draw volume bar
-            draw_volume_bar(img, length)
+            draw_volume_bar(img, length, minVol, maxVol)
 
         # Calculate and display FPS
         cTime = time.time()
