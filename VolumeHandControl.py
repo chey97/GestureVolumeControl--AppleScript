@@ -64,6 +64,21 @@ while True:
 
         print(f"Length: {length}, Volume: {vol}")
 
+        # Draw volume bar
+        volBar = np.interp(length, [minVol, maxVol], [400, 150])
+        volPer = np.interp(length, [minVol, maxVol], [0, 100])
+        cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
+        cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
+        cv2.putText(
+            img,
+            f"{int(volPer)} %",
+            (40, 450),
+            cv2.FONT_HERSHEY_COMPLEX,
+            1,
+            (255, 0, 0),
+            2,
+        )
+
     # Calculate and display FPS
     cTime = time.time()
     fps = 1 / (cTime - pTime)
