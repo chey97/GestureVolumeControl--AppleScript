@@ -11,6 +11,11 @@ wCam, hCam = 640, 480
 # Volume control parameters
 minVol, maxVol = 50, 200
 
+# AppleScript command template for setting volume
+SET_VOLUME_SCRIPT = """
+set volume output volume {volume}
+"""
+
 # Initialize video capture
 cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
@@ -19,10 +24,6 @@ cap.set(4, hCam)
 # Initialize hand detector
 detector = htm.handDetector(detectionCon=0.7)
 
-# AppleScript command template for setting volume
-SET_VOLUME_SCRIPT = """
-set volume output volume {volume}
-"""
 
 def execute_applescript(script):
     """Executes the given AppleScript command."""
@@ -31,30 +32,35 @@ def execute_applescript(script):
     except Exception as e:
         print(f"Error executing AppleScript: {e}")
 
+
 def draw_volume_bar(img, length):
     """Draws the volume bar on the image."""
     volBar = np.interp(length, [minVol, maxVol], [400, 150])
     volPer = np.interp(length, [minVol, maxVol], [0, 100])
-    
+
     # Draw background bar
     cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
-    
+
     # Draw filled volume level
     cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
-    
+
     # Display volume percentage
-    cv2.putText(img, f'{int(volPer)} %', (40, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 3)
+    cv2.putText(
+        img, f"{int(volPer)} %", (40, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 3
+    )
+
 
 def main():
     pTime = 0
+
     while True:
         success, img = cap.read()
         if not success:
             break
-        
+
         img = detector.findHands(img)
         lmList = detector.findPosition(img, draw=False)
-        
+
         if lmList:
             # Get coordinates of thumb and index finger
             x1, y1 = lmList[4][1], lmList[4][2]
@@ -74,8 +80,8 @@ def main():
             vol = np.interp(length, [minVol, maxVol], [0, 100])
 
             # Set system volume based on length
-            volume_script = SET_VOLUME_SCRIPT.format(volume=int(vol))
-            execute_applescript(volume_script)
+            # volume_script = SET_VOLUME_SCRIPT.format(volume=int(vol))
+            # execute_applescript(volume_script)
 
             print(f"Length: {length}, Volume: {vol}")
 
@@ -86,7 +92,15 @@ def main():
         cTime = time.time()
         fps = 1 / (cTime - pTime)
         pTime = cTime
-        cv2.putText(img, f"FPS: {int(fps)}", (30, 30), cv2.FONT_HERSHEY_COMPLEX, 0.75, (255, 0, 0), 2)
+        cv2.putText(
+            img,
+            f"FPS: {int(fps)}",
+            (30, 30),
+            cv2.FONT_HERSHEY_COMPLEX,
+            0.75,
+            (255, 0, 0),
+            2,
+        )
 
         # Display the video feed
         cv2.imshow("Video", img)
@@ -98,6 +112,7 @@ def main():
     # Release the capture when everything is done
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
