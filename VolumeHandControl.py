@@ -67,8 +67,8 @@ while True:
         # Draw volume bar
         volBar = np.interp(length, [minVol, maxVol], [400, 150])
         volPer = np.interp(length, [minVol, maxVol], [0, 100])
-        cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
-        cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
+        cv2.rectangle(img, (50, 150), (85, 400), (255, 0, 0), 2)
+        cv2.rectangle(img, (50, int(volBar)), (85, 400), (255, 0, 0), cv2.FILLED)
         cv2.putText(
             img,
             f"{int(volPer)} %",
@@ -95,7 +95,10 @@ while True:
 
     # Display the video feed
     cv2.imshow("Video", img)
-    cv2.waitKey(1)
+
+    # Check for ESC key press
+    if cv2.waitKey(1) & 0xFF == 27:
+        break
 
 # Release the capture when everything is done
 cap.release()
