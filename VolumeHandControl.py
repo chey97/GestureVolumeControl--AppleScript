@@ -14,7 +14,7 @@ def execute_applescript(script):
         print(f"Error executing AppleScript: {e}")
 
 
-def draw_volume_bar(img, length):
+def draw_volume_bar(img, length, minVol, maxVol):
     """Draws the volume bar on the image."""
     volBar = np.interp(length, [minVol, maxVol], [400, 150])
     volPer = np.interp(length, [minVol, maxVol], [0, 100])
