@@ -5,25 +5,6 @@ import HandTrackingModule as htm
 import math
 import subprocess
 
-# Set camera dimensions
-wCam, hCam = 640, 480
-
-# Volume control parameters
-minVol, maxVol = 50, 200
-
-# AppleScript command template for setting volume
-SET_VOLUME_SCRIPT = """
-set volume output volume {volume}
-"""
-
-# Initialize video capture
-cap = cv2.VideoCapture(0)
-cap.set(3, wCam)
-cap.set(4, hCam)
-
-# Initialize hand detector
-detector = htm.handDetector(detectionCon=0.7)
-
 
 def execute_applescript(script):
     """Executes the given AppleScript command."""
@@ -52,6 +33,24 @@ def draw_volume_bar(img, length):
 
 def main():
     pTime = 0
+    # Set camera dimensions
+    wCam, hCam = 640, 480
+
+    # Volume control parameters
+    minVol, maxVol = 50, 200
+
+    # AppleScript command template for setting volume
+    SET_VOLUME_SCRIPT = """
+    set volume output volume {volume}
+    """
+
+    # Initialize video capture
+    cap = cv2.VideoCapture(0)
+    cap.set(3, wCam)
+    cap.set(4, hCam)
+
+    # Initialize hand detector
+    detector = htm.handDetector(detectionCon=0.7)
 
     while True:
         success, img = cap.read()

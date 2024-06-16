@@ -5,25 +5,6 @@ import HandTrackingModule as htm
 import math
 import subprocess
 
-# Set camera dimensions
-wCam, hCam = 640, 480
-
-# Volume control parameters
-minVol, maxVol = 50, 200
-
-# AppleScript command for play/pause
-PLAY_PAUSE_SCRIPT = """
-tell application "System Events" to keystroke space
-"""
-
-# Initialize video capture
-cap = cv2.VideoCapture(0)
-cap.set(3, wCam)
-cap.set(4, hCam)
-
-# Initialize hand detector
-detector = htm.handDetector(detectionCon=0.7)
-
 
 def execute_applescript(script):
     """Executes the given AppleScript command."""
@@ -41,8 +22,27 @@ def is_palm_open(lmList):
     return all(lmList[tip][2] < lmList[tip - 2][2] for tip in tips[1:])
 
 
-
 def main():
+
+    # Set camera dimensions
+    wCam, hCam = 640, 480
+
+    # Volume control parameters
+    minVol, maxVol = 50, 200
+
+    # AppleScript command for play/pause
+    PLAY_PAUSE_SCRIPT = """
+    tell application "System Events" to keystroke space
+    """
+
+    # Initialize video capture
+    cap = cv2.VideoCapture(0)
+    cap.set(3, wCam)
+    cap.set(4, hCam)
+
+    # Initialize hand detector
+    detector = htm.handDetector(detectionCon=0.7)
+
     pTime = 0
     play_state = False
 
@@ -53,18 +53,18 @@ def main():
 
         img = detector.findHands(img)
         lmList = detector.findPosition(img, draw=False)
-        
+
         if lmList:
-                if is_palm_open(lmList):
-                    if not play_state:
-                        execute_applescript(PLAY_PAUSE_SCRIPT)
-                        play_state = True
-                        print("Play")
-                else:
-                    if play_state:
-                        execute_applescript(PLAY_PAUSE_SCRIPT)
-                        play_state = False
-                        print("Pause")
+            if is_palm_open(lmList):
+                if not play_state:
+                    execute_applescript(PLAY_PAUSE_SCRIPT)
+                    play_state = True
+                    print("Play")
+            else:
+                if play_state:
+                    execute_applescript(PLAY_PAUSE_SCRIPT)
+                    play_state = False
+                    print("Pause")
 
         # Calculate and display FPS
         cTime = time.time()
