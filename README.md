@@ -2,6 +2,8 @@
 
 This Python script allows you to control the system volume using hand gestures detected via a webcam. By measuring the distance between your thumb and index finger, you can adjust the volume level on your macOS.
 
+![Hand Tracking Land Marks](gesture.png)
+
 ## Prerequisites
 
 - Python 3.x
